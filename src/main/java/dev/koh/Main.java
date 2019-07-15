@@ -10,6 +10,7 @@ import java.util.Map;
 class Main {
 
     private static Main mainInstance;
+    private final String KEY_USERNAME = "username";
 
     private Main() {
     }
@@ -41,11 +42,27 @@ class Main {
     private void initializeGetRequestsHandlers() {
 
         //  Home Page
-        Spark.get("/", (req, res) -> "Hola..!! :D");
+//        Spark.get("/", (req, res) -> "Hola..!! :D");
+        Spark.get("/",
+                (req, res) -> {
+                    Map<String, String> model = new HashMap<>();
+                    String username = req.cookie(KEY_USERNAME);
+
+                    model.put(KEY_USERNAME, username);
+                    return new ModelAndView(model, "home-page.hbs");
+                },
+                new HandlebarsTemplateEngine()
+        );
 
         //  Sign-in Page
-        Spark.get("/sign-in",
-                (req, res) -> new ModelAndView(null, "sign-in.hbs"),
+        Spark.post("/sign-in",
+                (req, res) -> {
+                    Map<String, String> model = new HashMap<>();
+                    String username = req.cookie(KEY_USERNAME);
+
+                    model.put(KEY_USERNAME, username);
+                    return new ModelAndView(model, "sign-in.hbs");
+                },
                 new HandlebarsTemplateEngine()
         );
 
@@ -57,9 +74,11 @@ class Main {
         Spark.post("/home-page",
                 (req, res) -> {
 
-                    String username = "username";
+                    String username = req.queryParams(KEY_USERNAME);
+                    res.cookie(KEY_USERNAME, username);
+
                     Map<String, String> model = new HashMap<>();
-                    model.put(username, req.queryParams(username));
+                    model.put(KEY_USERNAME, username);
 
                     return new ModelAndView(model, "home-page.hbs");
                 },
@@ -72,7 +91,13 @@ class Main {
 
 /*
  *  Date Created  : 15th Juy 2K19, 03:56 PM..!!
- *  Last Modified : 15th Juy 2K19, 05:28 PM..!!
+ *  Last Modified : 15th Juy 2K19, 06:09 PM..!!
+ *
+ *  <| ================================================================ |>
+ *
+ *  3rd Commit - [Cookies]
+ *  1. Using Cookies to store values at client-side &
+ *     retain session information avoiding stateless of HTTP.
  *
  *  <| ================================================================ |>
  *

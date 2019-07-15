@@ -10,7 +10,13 @@
 <body>
 
 <form action="/home-page" method="post">
-    <p>Username : <input type="text" placeholder="Username" name="username"></p>
+
+    {{#if username }}
+        <p>Username : <input type="text" placeholder="Username" name="username" value="{{username}}"></p>
+    {{else}}
+        <p>Username : <input type="text" placeholder="Username" name="username"></p>
+    {{/if}}
+
     <br>
     <button>Sign-In</button>
 </form>

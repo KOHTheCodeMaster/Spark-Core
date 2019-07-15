@@ -9,7 +9,13 @@
 </head>
 <body>
 
-<p>Hola {{ username }}..!!</p>
+{{#if username }}
+    <h1>Hola {{ username }}..!!</h1>
+{{else}}
+    <h1>Hola Buddy..!!</h1>
+{{/if}}
+
+
 
 </body>
 </html>
